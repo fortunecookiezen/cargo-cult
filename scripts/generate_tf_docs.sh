@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # uses terraform-docs to generate documentation from terraform code
 set -euf -o pipefail
