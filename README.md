@@ -1,6 +1,6 @@
-# cargo-cult
+# the cargo-cult
 
-Shared tribal knowledge. Many deserve credit
+Snippets of examples, tribal knowledge, and copy-paste programming. We all do it.
 
 ## Cool links
 

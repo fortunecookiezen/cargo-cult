@@ -23,8 +23,20 @@ data "cloudinit_config" "cloud_init" {
 
   part {
     content_type = "text/cloud-config"
-    filename     = "mobilevpnnp.fnbo.com.pfx"
+    filename     = "part-001"
     content      = local.cloud_init_config
+  }
+
+  part {
+    content_type = "text/cloud-config"
+    filename     = "part-002"
+    content      = file("${path.module}/files/packages.yaml")
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    filename     = "shellscript.sh"
+    content      = file("${path.module}/files/shellscript.sh")
   }
 }
 
