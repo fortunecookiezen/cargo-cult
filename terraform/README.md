@@ -26,7 +26,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | `"vpc-01a6ca38851a2d182"` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | vpc id to create the endpoints in | `string` | `"vpc-01a6ca38851a2d182"` | no |
 
 ## Resources
 

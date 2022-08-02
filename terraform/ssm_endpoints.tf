@@ -8,8 +8,9 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 variable "vpc_id" {
-  type    = string
-  default = "vpc-01a6ca38851a2d182"
+  type        = string
+  default     = "vpc-01a6ca38851a2d182"
+  description = "vpc id to create the endpoints in"
 }
 
 data "aws_vpc" "this" {
