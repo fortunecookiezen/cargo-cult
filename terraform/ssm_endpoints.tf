@@ -47,7 +47,6 @@ resource "aws_default_security_group" "default" {
 
 resource "aws_vpc_endpoint" "this" {
   for_each = toset([
-    "ec2",
     "ec2messages",
     "ssm",
     "ssmmessages"
