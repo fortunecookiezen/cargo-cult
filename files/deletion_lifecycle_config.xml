@@ -1,0 +1,33 @@
+<LifecycleConfiguration>
+  <Rule>
+    <ID>DeleteAllCurrentVersions</ID>
+    <Filter>
+      <Prefix></Prefix>
+    </Filter>
+    <Status>Enabled</Status>
+    <Expiration>
+      <Days>1</Days>
+    </Expiration>
+  </Rule>
+  <Rule>
+    <ID>DeleteAllNonCurrentVersions</ID>
+    <Filter>
+      <Prefix></Prefix>
+    </Filter>
+    <Status>Enabled</Status>
+    <NoncurrentVersionExpiration>
+      <NoncurrentDays>1</NoncurrentDays>
+    </NoncurrentVersionExpiration>
+  </Rule>
+  <Rule>
+    <ID>DeleteExpiredDeleteMarkersAndIncompleteUploads</ID>
+    <Filter>
+      <Prefix></Prefix>
+    </Filter>
+    <Status>Enabled</Status>
+    <AbortIncompleteMultipartUpload>
+      <DaysAfterInitiation>1</DaysAfterInitiation>
+    </AbortIncompleteMultipartUpload>
+    <ExpiredObjectDeleteMarker>true</ExpiredObjectDeleteMarker>
+  </Rule>
+</LifecycleConfiguration>
