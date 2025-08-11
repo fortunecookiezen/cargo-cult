@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# This script sets a lifecycle configuration on all S3 buckets (except those containing "cloudtrail" in their names)
-# to delete all objects after 1 day. Use with caution, as this will permanently delete objects after the specified period.
+# This script sets a lifecycle configuration on all S3 buckets to immediately transition all objects to Glacier storage class.
+# Requires AWS CLI and jq to be installed and configured with appropriate permissions.
+# Ensure you have the necessary permissions to modify the bucket lifecycle configuration.
+# This is useful for archiving data that is infrequently accessed but needs to be retained for long periods, such as for compliance reasons or for account closure.
 set -euf -o pipefail
 for bucket in $(aws s3api list-buckets | jq -r '.Buckets[].Name'); do
   echo "Setting lifecycle configuration for bucket: $bucket";

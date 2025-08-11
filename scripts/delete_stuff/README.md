@@ -54,6 +54,8 @@ Delete all the SNS Topics matching a string in a region
 for topic_arn in $(aws sns list-topics --query "Topics[?contains(TopicArn, 'test')].TopicArn" | jq -r '.[]'); do echo "Deleting topic: $topic_arn"; aws sns delete-topic --topic-arn "$topic_arn"; done
 ```
 
+Delete all the SNS topics in a region
+
 ```bash
 for topic_arn in $(aws sns list-topics | jq -r '.Topics.[].TopicArn'); do echo "Deleting topic: $topic_arn"; aws sns delete-topic --topic-arn "$topic_arn"; done
 ```
@@ -61,33 +63,28 @@ for topic_arn in $(aws sns list-topics | jq -r '.Topics.[].TopicArn'); do echo "
 ```bash
 for topic_arn in $(aws sns list-topics --query "Topics[].TopicArn" | jq -r '.[]'); do echo "Deleting topic: $topic_arn"; aws sns delete-topic --topic-arn "$topic_arn"; done
 ```
+
 ### S3
 
-Empty a versioned S3 Bucket
+List bucket names
 
 ```bash
 aws s3api list-buckets --region $AWS_REGION --prefix fnbo-2-0 --query "Buckets[].Name" | jq -r '.[]'
 ```
 
+#### Empty a versioned S3 Bucket
+
+This will delete all objects from all buckets, as long as there aren't very many of them. [`empty_all_s3_buckets.sh`](./empty_all_s3_buckets.sh) is a better option for most use cases.
+
 ```bash
 for bucket_name in $(aws s3api list-buckets --region $AWS_REGION --prefix fnbo-2-0 --query "Buckets[].Name" | jq -r '.[]'); do echo "Emptying bucket $bucket_name"; aws s3api delete-objects --bucket $bucket_name --delete "$(aws s3api list-object-versions --bucket $bucket_name --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')";done
 ```
 
-```bash
-aws s3api delete-objects --bucket fnbo-2-0-fnbo-2-0-dev-dev-storage-dev-us-east-1 --delete "$(aws s3api list-object-versions --bucket fnbo-2-0-fnbo-2-0-dev-dev-storage-dev-us-east-1 \
---output json --query '{Objects: Versions[].{Key:Key,VersionId:VersionId}}')" --no-cli-pager
-```
+This will delete all objects in a versioned bucket, as long as there aren't very many of them. [`put_s3_deletion_config.sh`](./put_s3_deletion_config.sh) is a better option for most use cases.
 
 ```bash
-aws s3api delete-objects --bucket fnbo-2-0-fnbo-2-0-dev-1099-storage-dev-us-east-1 \
---delete "$(aws s3api list-object-versions --bucket fnbo-2-0-fnbo-2-0-dev-1099-storage-dev-us-east-1 \
---output json \
---query '{Objects: Versions[].{Key:Key,VersionId:VersionId}}')" --no-cli-pager
-```
-
-```bash
-aws s3api delete-objects --bucket fnbo-2-0-fnbo-2-0-dev-snowflake-dev-dev-us-east-1 \
---delete "$(aws s3api list-object-versions --bucket fnbo-2-0-fnbo-2-0-dev-snowflake-dev-dev-us-east-1 \
+aws s3api delete-objects --bucket my-bucket-us-east-1 \
+--delete "$(aws s3api list-object-versions --bucket my-bucket-us-east-1 \
 --output json \
 --query '{Objects: Versions[].{Key:Key,VersionId:VersionId}}')" --no-cli-pager
 ```
