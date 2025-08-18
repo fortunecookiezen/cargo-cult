@@ -28,6 +28,17 @@ for snapshot_id in $(aws ec2 describe-snapshots --owner-ids $(aws sts get-caller
 for image_id in $(aws ec2 describe-images --owners $(aws sts get-caller-identity --query "Account" --output text) --query "Images[].ImageId" | jq -r '.[]'); do echo "Deregistering image_id $image_id"; aws ec2 deregister-image --image-id $image_id --delete-associated-snapshots; done
 ```
 
+### ECR
+
+#### Delete all ECR repositories
+
+```bash
+for repo_name in $(aws ecr describe-repositories --query "repositories[*].repositoryName" | jq -r '.[]'); do
+    echo "Deleting repository: $repo_name"
+    aws ecr delete-repository --repository-name "$repo_name" --force
+done
+```
+
 ### RDS
 
 ```bash
@@ -46,9 +57,27 @@ aws rds describe-db-clusters --query "DBClusters[].DBClusterIdentifier" | jq -r 
 for db_cluster_id in $(aws rds describe-db-clusters --query "DBClusters[].DBClusterIdentifier" | jq -r '.[]'); do echo "Deleting db_cluster $db_cluster_id"; aws rds delete-db-cluster --db-cluster-identifier $db_cluster_id --skip-final-snapshot --delete-automated-backups --no-cli-pager; done
 ```
 
+### SecretsManager
+
+#### Delete all the secrets
+
+```bash
+for secret_arn in $(aws secretsmanager list-secrets --query 'SecretList[*].ARN' | jq -r '.[]'); do
+  aws secretsmanager delete-secret --secret-id "$secret_arn" --recovery-window-in-days 7
+done
+```
+
+#### Delete all the secrets right now!
+
+```bash
+for secret_arn in $(aws secretsmanager list-secrets --query 'SecretList[*].ARN' | jq -r '.[]'); do
+  aws secretsmanager delete-secret --secret-id "$secret_arn" --force-delete-without-recovery
+done
+```
+
 ### SNS
 
-Delete all the SNS Topics matching a string in a region
+#### Delete all the SNS Topics matching a string in a region
 
 ```bash
 for topic_arn in $(aws sns list-topics --query "Topics[?contains(TopicArn, 'test')].TopicArn" | jq -r '.[]'); do echo "Deleting topic: $topic_arn"; aws sns delete-topic --topic-arn "$topic_arn"; done
